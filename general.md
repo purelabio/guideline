@@ -44,3 +44,6 @@
   * One thing should perform one action.
   * Its name should contain only one term.
   * When a name contains multiple terms, it's a signal that you should break it up.
+* Validate inputs immediately.
+* Fail early and loudly.
+* Prefer early returns over nested conditionals.
