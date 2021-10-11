@@ -1,3 +1,8 @@
+### TODO
+  * false in where condition make query slower
+  * names mix on selecting tables
+  * optimization by proper casting (Mike)
+
 ### Always use arguments; never interpolate into strings
 
 Forbidden:
