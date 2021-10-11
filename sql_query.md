@@ -1,7 +1,8 @@
 ### TODO
-  * false in where condition make query slower
-  * names mix on selecting tables
-  * optimization by proper casting (Mike)
+
+* Postgres gotcha: `false or` in `where` can make queries slower.
+* Never use unqualified names in queries with joins (unless `using`).
+* Avoid unnecessary casts to and from `text`.
 
 ### Always use arguments; never interpolate into strings
 
