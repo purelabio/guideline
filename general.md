@@ -17,7 +17,7 @@
 * Avoid avoidable closures. Define functions in root scope.
   * Move unavoidable closures as close to root scope as possible.
 * Reduce the amount of possible states.
-  * Simpler software has as fewer states as possible.
+  * Simpler software has as few states as possible.
   * More states = more likely to have undefined behaviors = less reliability.
 * Avoid invalid states.
   * In correct software, all states must be intentional.
@@ -39,5 +39,8 @@
 * Prefer immutability by default, create-once, assign-once, use-once.
 * Make zero values useful.
 * Copy-paste is unavoidable, but the only acceptable unit of copy-paste is a single expression, preferably a single function call.
-* Prefer synchronize code over asynchronize.
-* Only per one name (term) for each thing.
+* Prefer sync code over async.
+* One action, one concept.
+  * One thing should perform one action.
+  * Its name should contain only one term.
+  * When a name contains multiple terms, it's a signal that you should break it up.
