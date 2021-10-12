@@ -47,3 +47,6 @@
 * Validate inputs immediately.
 * Fail early and loudly.
 * Prefer early returns over nested conditionals.
+* Inject assertion and invariant checks.
+* Compile time errors is better then run-time errors.
+* Run-time errors must be as close to trouble as you possible.
