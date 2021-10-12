@@ -46,4 +46,7 @@
   * When a name contains multiple terms, it's a signal that you should break it up.
 * Validate inputs immediately.
 * Fail early and loudly.
+  * Compile-time errors are better than run-time errors.
+  * Run-time errors must be as close to the trouble as possible.
+  * Use runtime assertions and invariant checks.
 * Prefer early returns over nested conditionals.
