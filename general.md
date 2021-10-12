@@ -14,6 +14,9 @@
   * Deduplicate by breaking things into smaller bricks.
   * Avoid making new abstractions.
   * Making new names is unavoidable.
+* Deduplicate costs.
+  * Everything that can be done only once, should be done only once.
+  * Costs that can be paid at compile time, should be paid at compile time.
 * Avoid avoidable closures. Define functions in root scope.
   * Move unavoidable closures as close to root scope as possible.
 * Reduce the amount of possible states.
