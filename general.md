@@ -41,6 +41,7 @@
 * Avoid code that does nothing.
 * Prefer immutability by default, create-once, assign-once, use-once.
 * Make zero values useful.
+  * Whenever possible, treat nil as the zero value of any given type.
 * Copy-paste is unavoidable, but the only acceptable unit of copy-paste is a single expression, preferably a single function call.
 * Prefer sync code over async.
 * One action, one concept.

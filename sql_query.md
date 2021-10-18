@@ -1,3 +1,5 @@
+(This file is a work in progress.)
+
 ### TODO
 
 * Postgres gotcha: `false or` in `where` can make queries slower.
