@@ -9,6 +9,7 @@
 * Embed by value. Never embed by pointer.
 * Take single-method interfaces as inputs.
 * Return single concrete types.
+* For non-stack-allocated types, prefer inout parameters (by pointer) over return parameters. The caller should be able to preallocate ("bring your own buffer").
 * Types are more powerful than funcs. Instead of writing a func, consider writing a type that implements that func as a method, ideally as a common interface.
   * For example: instead of a pretty-printing func `ƒ(any)->string`, write a single-valued `[1]any` type with method `.String()`. This can be used for both eager _and_ lazy printing.
 * Create specialized types for similar, but semantically different units.

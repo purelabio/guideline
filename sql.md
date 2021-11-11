@@ -45,6 +45,7 @@ Preventing duplication:
     * Dropped before each migration, re-created after running migrations.
 * Restrict maximum size of resizable columns such as text, byte array, JSON.
 * Use indexes.
+* Non-read-only operations in backend code must use DB transactions. Read-only operations can use non-transactional connections.
 
 ## Migrations
 

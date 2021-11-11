@@ -4,7 +4,7 @@
 
 * Every table has a primary key: `id` with type `uuid`.
 
-  * To preserve insertion order, use `ord bigserial not null unique`.
+  * If need to preserve insertion order, use `ord bigserial not null` with a unique constraint.
 
 * Columns have explicit `not null` or `null`.
 
@@ -19,6 +19,8 @@
 * Time must be stored as a `timestamptz` rather than `timestamp` in order to avoid a massive Postgres gotcha: when parsing datetime from a string, `timestamp` TRUNCATES the input and completely ignores the timezone offset, parsing it AS IF the datetime part was specified in UTC time rather than local time. `timestamptz` avoids this problem. Note that `timestamptz` doesn't actually store a timezone, it only parses it, then stores UTC time.
 
 * Where possible, use timestamps instead of booleans. For example, instead of `is_deleted`, store `deleted_at`.
+
+* Prefer uint over `bigint`. SQL doesn't provide uints, so you have to define them. Suggestion: `nat` for "natural", `nat_pos` for "natural positive".
 
 * When storing objects from 3rd party services such as Stripe, fields copied from the source must keep the original name prefixed with `external_`, while any fields added or modified by our code must be unprefixed and follow our naming conventions.
 
@@ -52,8 +54,6 @@
 * Junction/edge tables have their own `id` and a separate unique index for the references they contain, rather than a composite primary key.
 
 * Avoid `create if not exists`, `create or replace`, etc. The schema is applied to an empty database. Migrations must precisely know the schema they're being applied to. Neither the schema nor the migrations should need the "optional" clauses.
-
-* Prefer `nat_pos` or `nat` over `bigint`.
 
 * Ensure that invalid data cannot be represented. Use check constraints, exclude constraints, unique indexes, foreign keys, enums, domain constraints, etc., to prevent invalid states. If no other option is available, use triggers.
 

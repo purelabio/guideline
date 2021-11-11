@@ -54,3 +54,4 @@
   * Run-time errors must be as close to the trouble as possible.
   * Use runtime assertions and invariant checks.
 * Prefer early returns over nested conditionals.
+* API design: implement the general case; optimize for the common case.
