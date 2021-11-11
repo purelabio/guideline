@@ -3,8 +3,10 @@
 ### TODO
 
 * Postgres gotcha: `false or` in `where` can make queries slower.
+
 * Never use unqualified names in queries with joins (unless `using`).
-* Avoid unnecessary casts to and from `text`.
+
+  * Hazardous name scoping rules can lead to accidental shadowing.
 
 ### Always use arguments; never interpolate into strings
 
@@ -170,4 +172,24 @@ from
   inner join table_b on some_condition
 where
   table_b.another_col is not null
+```
+
+### Avoid unnecessary casts to and from `text`.
+
+To-and-from-text conversions in the wrong places can be expensive.
+
+Worse:
+
+```sql
+:some_arg::text[]::some_enum[] is null
+
+some_col = any(:some_arg::text[]::some_enum[])
+```
+
+Better, but still questionable:
+
+```sql
+:some_arg::text[] is null
+
+some_col::text = any(:some_arg)
 ```

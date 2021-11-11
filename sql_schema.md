@@ -4,7 +4,9 @@
 
 * Every table has a primary key: `id` with type `uuid`.
 
-  * If need to preserve insertion order, use `ord bigserial not null` with a unique constraint.
+  * If you need to preserve insertion order, use `ord bigserial not null` with a unique constraint.
+
+  * For hardcoded pseudo-enum tables such as currencies, it's okay to use non-uuid as primary key. For example, currencies would use `char(3)`.
 
 * Columns have explicit `not null` or `null`.
 
@@ -13,6 +15,8 @@
 * Approach to polymorphic relations is described below: [Polymorphic Relations](#polymorphic-relations).
 
 * All tables must have columns `created_at`, `updated_at`, and trigger `touch_updated_at`.
+
+* All constraints, including primary keys, foreign keys, and unique indexes, must be named manually. This prevents accidental double creation of the same constraint, makes it possible to reliably rename and drop constraints in migrations without "guessing" their names, and exposes naming inconsistencies caused by table renaming.
 
 * Tables with user-created data, such as person profiles or articles, include `deleted_at` and shouldn't be actually deleted. Internal tables such as junctions/edges don't include `deleted_at` and should be actually deleted. Versioned tables might use `is_deleted` instead of `deleted_at`.
 
@@ -30,8 +34,7 @@
 
   * Measured in seconds and stored as `nat` or `nat_pos`, to keep them easily portable between languages and data formats.
 
-* All constraints, including unique indexes, must be named like this:
-  `<table_name>_<description>`. This improves error messages when constraint violations are exposed to clients. Named constraints and indexes can be reliably dropped in migrations.
+* Constraint names should follow a convention similar to this: `<table_name>.<description>` or `<table_name>.<category>.<description>`. This improves error messages when constraint violations are exposed to clients.
 
 * Names of all non-unique indexes must be UUIDs without dashes. This makes them much easier to define, and also avoids naming collisions.
 
