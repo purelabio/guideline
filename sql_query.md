@@ -186,10 +186,10 @@ Worse:
 some_col = any(:some_arg::text[]::some_enum[])
 ```
 
-Better, but still questionable:
+Better:
 
 ```sql
-:some_arg::text[] is null
+:some_arg::actual_type[] is null
 
-some_col::text = any(:some_arg)
+some_col = any(:some_arg::actual_type[])
 ```

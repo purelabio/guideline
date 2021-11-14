@@ -60,7 +60,7 @@ Preventing duplication:
   * Migrations are not idempotent.
   * Migrations are not reversible.
   * Sometimes OK for schemas and extensions.
-* Migrations must have unique _hardcoded_ keys to avoid collisions with _future_ migrations after removing old migrations from the codebase.
+* Migrations must have _hardcoded unique_ keys to avoid collisions with _future_ migrations after removing old migrations from the codebase.
   * Can use hardcoded UUIDs.
   * Can use hardcoded dates.
 * Migrations must have a hardcoded order, because they often depend on each other.
