@@ -38,15 +38,18 @@ conn.QueryContext(ctx, query, args...)
 Recommended:
 
 ```golang
-query := sqlb.NamedQuery(`
+import s "github.com/mitranim/sqlb"
+
+query := s.DictQ(`
   select *
   from some_table
   where id = :id
-`, map[string]interface{}{
+`, s.Dict{
   `id`: id,
 })
 
-conn.QueryContext(ctx, query.String(), query.Args...)
+text, args := s.Reify(query)
+conn.QueryContext(ctx, text, args...)
 ```
 
 ### Prefer explicit joins over implicit joins
@@ -110,7 +113,6 @@ Why:
 
 * Views are automatically reusable.
 * The resulting query is simpler.
-* Fewer identifiers in scope = less likely to accidentally use the wrong column or table.
 
 ### Prefer outer joins over inner joins
 
@@ -193,3 +195,7 @@ Better:
 
 some_col = any(:some_arg::actual_type[])
 ```
+
+### Avoid `distinct from`
+
+In Postgres, `is [not] distinct from` is not indexable, and performs much slower than an equivalent combination of `=` and `is [not] null`.

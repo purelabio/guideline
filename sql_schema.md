@@ -67,33 +67,39 @@
 To represent polymorphic relations, we use a set of foreign key fields
 referencing different tables, alongside a polymorphic check constraint.
 
-    create table reactions (
-      id                     uuid          primary key default gen_random_uuid(),
-      person_id              uuid          not null references persons on update cascade on delete cascade,
+```sql
+create table reactions (
+  id                 uuid        not null default gen_random_uuid(),
+  person_id          uuid        not null,
+  subject_article_id uuid            null,
+  subject_service_id uuid            null,
+  subject_person_id  uuid            null,
+  is_like            bool        not null,
+  is_fav             bool        not null,
+  created_at         timestamptz not null default now(),
+  updated_at         timestamptz not null default now(),
 
-      subject_article_id     uuid          null references articles on update cascade on delete cascade,
-      subject_service_id     uuid          null references services on update cascade on delete cascade,
-      subject_person_id      uuid          null references persons  on update cascade on delete cascade,
+  constraint "reactions.key"                    primary key (id),
+  constraint "reactions.key.person_id"          foreign key (person_id) references persons on update cascade on delete cascade,
+  constraint "reactions.key.subject_article_id" foreign key (articles)  references persons on update cascade on delete cascade,
+  constraint "reactions.key.subject_service_id" foreign key (services)  references persons on update cascade on delete cascade,
+  constraint "reactions.key.subject_person_id"  foreign key (persons)   references persons on update cascade on delete cascade,
 
-      is_like                bool          not null,
-      is_fav                 bool          not null,
+  constraint "reactions.mutex.subject"
+  check ((
+    (subject_article_id is not null)::int +
+    (subject_service_id is not null)::int +
+    (subject_person_id  is not null)::int +
+    0
+  ) = 1),
 
-      created_at             timestamptz   not null default current_timestamp,
-      updated_at             timestamptz   not null default current_timestamp
+  -- To make sure the user can place only one like per subject.
+  constraint "reactions.unique.article" unique (person_id, subject_article_id),
+  constraint "reactions.unique.service" unique (person_id, subject_service_id),
+  constraint "reactions.unique.person"  unique (person_id, subject_person_id)
+);
 
-      constraint "db.constraint.reactions_subject_mutex"
-      check ((
-        (subject_article_id is not null)::int +
-        (subject_service_id is not null)::int +
-        (subject_person_id  is not null)::int +
-        0
-      ) = 1)
-    );
-
-    -- To make sure the user can place only one like per subject.
-    create unique index "db.constraint.reaction_unique_article" on reactions (person_id, subject_article_id);
-    create unique index "db.constraint.reaction_unique_service" on reactions (person_id, subject_service_id);
-    create unique index "db.constraint.reaction_unique_person"  on reactions (person_id, subject_person_id);
+```
 
 This approach has several advantages over others:
 

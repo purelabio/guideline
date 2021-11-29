@@ -6,7 +6,7 @@
   * When designing an API, prefer to take and return non-pointers.
   * Forcing pointers reduces API usability.
 * Prefer `var name Type` over `name := new(Type)`.
-* Embed by value. Never embed by pointer.
+* Embed by value. Avoid embedding by pointer.
 * Take single-method interfaces as inputs.
 * Return single concrete types.
 * For non-stack-allocated types, prefer inout parameters (by pointer) over return parameters. The caller should be able to preallocate ("bring your own buffer").
