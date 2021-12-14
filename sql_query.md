@@ -196,6 +196,23 @@ Better:
 some_col = any(:some_arg::actual_type[])
 ```
 
-### Avoid `distinct from`
+### Be careful with `distinct from`
 
-In Postgres, `is [not] distinct from` is not indexable, and performs much slower than an equivalent combination of `=` and `is [not] null`.
+In Postgres, `is [not] distinct from` is not indexable, and performs much slower than an equivalent combination of `=` and `is [not] null`. It should be avoided in queries.
+
+However, `is not distinct from` is the _only_ correct way to detect `null` in composite type constraints:
+
+```sql
+create type coin_struct as (currency currency, cents nat_pos);
+
+create domain coin as coin_struct
+  constraint "coin.check"
+  check (
+    value is not distinct from null
+    or (
+      true
+      and (value).currency is not null
+      and (value).cents    is not null
+    )
+  );
+```

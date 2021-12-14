@@ -16,7 +16,7 @@
 
 * All tables must have columns `created_at`, `updated_at`, and trigger `touch_updated_at`.
 
-* All constraints, including primary keys, foreign keys, and unique indexes, must be named manually. This prevents accidental double creation of the same constraint, makes it possible to reliably rename and drop constraints in migrations without "guessing" their names, and exposes naming inconsistencies caused by table renaming.
+* All constraints, including primary keys, foreign keys, unique indexes, and simple checks, must be named manually. This prevents accidental double creation of the same constraint, makes it possible to reliably rename and drop constraints in migrations without "guessing" their names, and exposes naming inconsistencies caused by table renaming.
 
 * Tables with user-created data, such as person profiles or articles, include `deleted_at` and shouldn't be actually deleted. Internal tables such as junctions/edges don't include `deleted_at` and should be actually deleted. Versioned tables might use `is_deleted` instead of `deleted_at`.
 
@@ -36,7 +36,9 @@
 
 * Constraint names should follow a convention similar to this: `<table_name>.<description>` or `<table_name>.<category>.<description>`. This improves error messages when constraint violations are exposed to clients.
 
-* Names of all non-unique indexes must be UUIDs without dashes. This makes them much easier to define, and also avoids naming collisions.
+* Names of all non-unique indexes should be UUIDs without dashes. This makes them much easier to define, and also avoids naming collisions.
+
+  * When possible, comment on an index what is it _for_. Provide the name of the relevant SQL view, query-generating function, etc.
 
 * Create matching indexes for queries that are known to be slow. Keep in mind that syncing indexes with queries increases the code maintenance burden.
 
