@@ -4,7 +4,7 @@
 
 * Every table has a primary key: `id` with type `uuid`.
 
-  * If you need to preserve insertion order, use `ord bigserial not null` with a unique constraint.
+  * For tracking insertion order, use `ord bigserial not null` with a unique constraint. Note that timestamps are _not_ automatically unique.
 
   * For hardcoded pseudo-enum tables such as currencies, it's okay to use non-uuid as primary key. For example, currencies would use `char(3)`.
 
@@ -108,3 +108,53 @@ This approach has several advantages over others:
   * This preserves the correct relational data structure; we have foreign key constaints ensuring the integrity of the data; there's no need for a field that would specify the subject's table. Even if all IDs in the system were UUIDs, and there were never any collisions, it's not correct even from a conceptual point of view to mix IDs from different tables in one field.
 
   * We retain specialized tables for different entity types, with their own structure, constraints, and indexes.
+
+## Enums
+
+Sometimes you want to use native enums. Sometimes you want to use pseudo-enum tables. See below.
+
+Example with enum:
+
+```sql
+create type gender as enum ('female', 'male', 'other');
+
+create table persons (
+  id     uuid   not null default gen_random_uuid(),
+  gender gender     null,
+
+  constraint "persons.key" primary key (id)
+);
+```
+
+Example with pseudo-enum table:
+
+```sql
+create domain gender as text;
+
+create table genders (id gender primary key);
+
+insert into genders values ('female'), ('male'), ('other');
+
+create table persons (
+  id     uuid   not null default gen_random_uuid(),
+  gender gender     null,
+
+  constraint "persons.key" primary key (id),
+
+  constraint "persons.key.gender"
+    foreign key (gender)
+    references genders on update cascade on delete set null
+);
+```
+
+Enums are supposed to be more compact. Internally they're stored as numbers. The text representation is used only when interfacing with clients. This may give them an advantage, but you should measure and compare the difference in your particular DB.
+
+An enum type carries its constraints with itself, while pseudo-enums require a foreign key constraint in each table that references them. Enums require less code, and you can't forget to add a foreign key.
+
+However, at least in Postgres, enums are difficult to extend. You can add a value, but can't use it in the same transaction. You can't remove values. Meanwhile, pseudo-enum tables have no such restrictions. Therefore, a pseudo-enum is a safer choice for future extensibility.
+
+Note that even gender may be extensible!
+
+```sql
+insert into genders values ('none'), ('prefer_not_to_say');
+```
