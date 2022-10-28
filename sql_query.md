@@ -216,3 +216,45 @@ create domain coin as coin_struct
     )
   );
 ```
+
+### Postgres gotcha: prefer `=` over `in` when possible
+
+Postgres (version 14 at the time of writing) has a performance gotcha. Sometimes when `=` and `in` should be equivalent, `in` can be much slower.
+
+Example with `in`:
+
+```sql
+explain analyze
+with
+  pid as (select id from persons where email = $1),
+  aid as (select id from fin_accounts where person_id = (table pid))
+select *
+from fin_account_credit_balances
+where id in (table aid)
+```
+
+```
+Planning Time: 3.821 ms
+Execution Time: 63.747 ms
+```
+
+Exactly the same but with `=`:
+
+```
+explain analyze
+with
+  pid as (select id from persons where email = 'me@mitranim.com'),
+  aid as (select id from fin_accounts where person_id = (table pid))
+select *
+from fin_account_credit_balances
+where id = (table aid)
+```
+
+```
+Planning Time: 2.890 ms
+Execution Time: 9.602 ms
+```
+
+### Avoid `limit 1`
+
+`limit 1` is an antipattern. Single entries must _always_ be identified by a unique key, such as the primary key.

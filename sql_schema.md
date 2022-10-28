@@ -58,6 +58,8 @@
 
 * Junction/edge tables have their own `id` and a separate unique index for the references they contain, rather than a composite primary key.
 
+  * This allows to reference them by a single key, and change their unique constraints in the future without breaking references.
+
 * Avoid `create if not exists`, `create or replace`, etc. The schema is applied to an empty database. Migrations must precisely know the schema they're being applied to. Neither the schema nor the migrations should need the "optional" clauses.
 
 * Ensure that invalid data cannot be represented. Use check constraints, exclude constraints, unique indexes, foreign keys, enums, domain constraints, etc., to prevent invalid states. If no other option is available, use triggers.

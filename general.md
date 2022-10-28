@@ -54,4 +54,9 @@
   * Run-time errors must be as close to the trouble as possible.
   * Use runtime assertions and invariant checks.
 * Prefer early returns over nested conditionals.
-* API design: implement the general case; optimize for the common case.
+
+## API design
+
+* Implement the general case; optimize for the common case.
+* Types are more powerful than functions. Consider implementing any given feature as a type rather than a function.
+* Instance methods are more powerful than static methods. Consider implementing any given feature as an instance method. Provide static methods or top-level functions as shortcuts.

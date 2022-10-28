@@ -26,22 +26,20 @@ Preventing duplication:
   * Always up to date.
   * Reflects the _current_ state of the schema.
   * Can be used to create an empty DB, with no migrations.
-  * When writing migrations, also modify the schema file.
+  * Making changes: modify the schema file, inspect the diff, write migrations.
 * Each schema = 1 file (not a folder).
   * SQL definitions are order-sensitive.
-  * Much easier than automatic reordering of definitions.
+  * Automatic reordering is non-trivial. Manual is easier.
 * Two schemas:
   * Main schema for persistent data (usually `public`).
     * Extensions.
     * Tables.
-    * Triggers.
     * Types used by tables.
-    * Functions used by tables and triggers.
-    * Views used by triggers.
     * Modified via migrations.
-  * Ephemeral schema for views and functions (`eph`).
-    * Views.
+  * Ephemeral schema for functions, triggers, views: `eph`.
     * Functions.
+    * Triggers.
+    * Views.
     * Dropped before each migration, re-created after running migrations.
 * Restrict maximum size of resizable columns such as text, byte array, JSON.
 * Use indexes.
