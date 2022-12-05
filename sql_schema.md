@@ -2,9 +2,17 @@
 
 * Be consistent. Use the same principles for all tables.
 
-* Every table has a primary key: `id` with type `uuid`.
+* Every table has a primary key.
 
-  * For tracking insertion order, use `ord bigserial not null` with a unique constraint. Note that timestamps are _not_ automatically unique.
+  * For "primary" tables: column `id`, type `uuid`, randomly generated.
+
+  * For "junction" tables: composite key: ids of connected entities.
+
+  * For "secondary" tables that correspond 1-to-1 to primary tables: reuse the id of the connected primary entity.
+
+    * Example: primary table `persons` with PK `id`, secondary table `person_prefs` with PK `person_id`.
+
+  * For tracking insertion order, use either `ord bigserial not null` with a unique constraint, or precise timestamps with a unique constraint. Note that not all SQL databases support precise timestamps.
 
   * For hardcoded pseudo-enum tables such as currencies, it's okay to use non-uuid as primary key. For example, currencies would use `char(3)`.
 
@@ -55,10 +63,6 @@
 
         on update cascade on delete cascade
         on update cascade on delete set null
-
-* Junction/edge tables have their own `id` and a separate unique index for the references they contain, rather than a composite primary key.
-
-  * This allows to reference them by a single key, and change their unique constraints in the future without breaking references.
 
 * Avoid `create if not exists`, `create or replace`, etc. The schema is applied to an empty database. Migrations must precisely know the schema they're being applied to. Neither the schema nor the migrations should need the "optional" clauses.
 
