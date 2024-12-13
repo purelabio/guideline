@@ -18,7 +18,13 @@
 
 * Columns have explicit `not null` or `null`.
 
-* Prefer `not null` over `null`. Where possible, prefer `not null default X` where X is the zero value.
+* For non-unique, non-reference columns, prefer `not null` over `null`.
+
+  * Where possible, prefer `not null default X` where X is the zero value.
+
+  * Exception: dates and date-times should be nullable because they don't have a useful zero value.
+
+* For unique columns, disallow the zero value such as `0` or `''`. If the value may be missing, make the column nullable. Unique indexes automatically ignore nulls, making it easy to define unconditional unique constraints compatible with upsert queries.
 
 * Approach to polymorphic relations is described below: [Polymorphic Relations](#polymorphic-relations).
 

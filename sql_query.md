@@ -176,7 +176,7 @@ where
   table_b.another_col is not null
 ```
 
-### Avoid unnecessary casts to and from `text`.
+### Avoid unnecessary casts to and from `text`
 
 To-and-from-text conversions in the wrong places can be expensive.
 
